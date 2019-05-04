@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Queue</title>
+
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly.min.css">
+    <link rel="stylesheet" type="text/css"
+          href="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/css/patternfly-additions.min.css">
+</head>
+<body>
+
+
+
+<div class="container">
+
+    <h1>Queue</h1>
+
+    <table class="table table-striped">
+        <thead class="thead-dark">
+        <tr>
+            <th>Order Id</th>
+            <th>Product</th>
+            <th>For</th>
+            <th>Prepared By</th>
+            <th>State</th>
+        </tr>
+        </thead>
+        <tbody>
+
+        </tbody>
+    </table>
+
+</div>
+
+
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/patternfly/3.24.0/js/patternfly.min.js"></script>
+
+<script>
+
+    $(function () {
+        var source = new EventSource("http://localhost:8080/queue");
+        source.onmessage = function(e) {
+            console.log(e);
+            var state = JSON.parse(e.data);
+            $("tbody").append(line(state));
+        };
+    });
+
+    function line(state) {
+        var id = state.order.orderId;
+        var product = state.order.product;
+        var customer = state.order.name;
+        var barista = "";
+        if (state.beverage) {
+            barista = state.beverage.preparedBy;
+        }
+        return "<tr>" +
+            "<td>" + id + "</td>" +
+            "<td>" + product + "</td>" +
+            "<td>" + customer + "</td>" +
+            "<td>" + barista + "</td>" +
+            "<td>" + state.state + "</td></tr>";
+    }
+
+
+</script>
+</html>
