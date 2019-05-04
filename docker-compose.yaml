@@ -8,7 +8,7 @@ services:
       "sh", "-c",
       "bin/zookeeper-server-start.sh config/zookeeper.properties"
     ]
-    expose:
+    ports:
       - "2181:2181"
     environment:
       LOG_DIR: /tmp/logs
