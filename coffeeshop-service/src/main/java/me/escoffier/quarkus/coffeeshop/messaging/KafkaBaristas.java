@@ -33,7 +33,6 @@ public class KafkaBaristas {
         return CompletableFuture.supplyAsync(() -> {
             states.send(PreparationState.queued(order));
             orders.send(jsonb.toJson(order));
-            System.out.println("Ordered a " + order.getProduct());
             return order;
         }, executor);
     }

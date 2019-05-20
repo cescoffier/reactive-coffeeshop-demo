@@ -1,4 +1,4 @@
-package me.escoffier.quarkus.coffeeshop;
+package me.escoffier.quarkus.coffeeshop.model;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;

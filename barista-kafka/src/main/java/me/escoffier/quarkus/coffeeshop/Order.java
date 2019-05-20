@@ -1,5 +1,8 @@
 package me.escoffier.quarkus.coffeeshop;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection
 public class Order {
 
     private String product;

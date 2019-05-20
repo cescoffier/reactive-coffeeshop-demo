@@ -11,7 +11,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 @Path("/queue")
-public class DashboardResource {
+public class BoardResource {
 
     @Inject
     @Stream("beverages")

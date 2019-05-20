@@ -69,7 +69,7 @@ Stop the HTTP Barista, you can't order coffee anymore.
 
 * Barista code: `me.escoffier.quarkus.coffeeshop.KafkaBarista`: Read from `orders`, write to `queue`
 * Bridge in the CoffeeShop: `me.escoffier.quarkus.coffeeshop.messaging.KafkaBaristas` just enqueue the orders in a single thread (one counter)
-* Get prepared beverages on `me.escoffier.quarkus.coffeeshop.dashboard.DashboardResource` and send to SSE
+* Get prepared beverages on `me.escoffier.quarkus.coffeeshop.dashboard.BoardResource` and send to SSE
 
 * Open browser to http://localhost:8080/queue
 * Order coffee with:
