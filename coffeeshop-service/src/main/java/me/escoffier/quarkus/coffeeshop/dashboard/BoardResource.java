@@ -20,7 +20,9 @@ public class BoardResource {
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public Publisher<String> getQueue() {
-        return queue.peek(s -> System.out.println("GOT: " + s)).buildRs();
+        return queue
+                .peek(s -> System.out.println("GOT: " + s))
+                .buildRs();
     }
 
 }

@@ -1,5 +1,8 @@
 package me.escoffier.quarkus.coffeeshop;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
+@RegisterForReflection(methods = true, fields = true)
 public class Beverage {
 
     private String beverage;

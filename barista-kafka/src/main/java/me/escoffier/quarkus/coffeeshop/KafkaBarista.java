@@ -29,15 +29,18 @@ public class KafkaBarista {
                 .thenApply(beverage -> PreparationState.ready(order, beverage));
     }
 
+
+
+
     private CompletionStage<Beverage> makeIt(Order order) {
         return CompletableFuture.supplyAsync(() -> {
             System.out.println("Preparing a " + order.getProduct());
-            nap();
+            prepare();
             return new Beverage(order, name);
         });
     }
 
-    private void nap() {
+    private void prepare() {
         try {
             Thread.sleep(random.nextInt(5000));
         } catch (InterruptedException e) {
