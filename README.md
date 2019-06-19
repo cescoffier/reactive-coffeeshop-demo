@@ -17,7 +17,7 @@ Run Kafka with:
 docker-compose up
 ```
 
-Then, create the `orders` topic with `./create-orders.sh`
+Then, create the `orders` topic with `./create-topics.sh`
 
 # Run the demo
 
