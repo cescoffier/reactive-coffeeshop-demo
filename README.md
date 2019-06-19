@@ -11,10 +11,23 @@ mvn clean package
 
 ## Prerequisites
 
+Install Kafka locally for the Kafka tools e.g.
+
+```bash
+brew install kafka
+```
+
 Run Kafka with:
 
 ```bash
 docker-compose up
+```
+
+In case of previous run, you can clean the state with
+
+```bash
+docker-compose down
+docker-compose rm
 ```
 
 Then, create the `orders` topic with `./create-topics.sh`
@@ -36,7 +49,7 @@ mvn compile quarkus:dev
 
 ```bash
 cd barista-http
-mvn compile quarkus:dev
+java -Dbarista.name=tom -jar target/barista-http-1.0-SNAPSHOT-runner.jar
 ```
 
 ```bash
@@ -52,15 +65,15 @@ The first part of the demo shows HTTP interactions:
 * CoffeeShop code: `me.escoffier.quarkus.coffeeshop.CoffeeShopResource.http`
 * Generated client: `me.escoffier.quarkus.coffeeshop.http.BaristaService`
 
-Important points:
-* Request-reply
-
 Order coffees with:
 
 ```bash
+while [ true ]
+do
 http POST :8080/http product=latte name=clement
 http POST :8080/http product=expresso name=neo
 http POST :8080/http product=mocha name=flore
+done
 ```
 
 Stop the HTTP Barista, you can't order coffee anymore.
@@ -68,10 +81,10 @@ Stop the HTTP Barista, you can't order coffee anymore.
 # Execute with Kafka
 
 * Barista code: `me.escoffier.quarkus.coffeeshop.KafkaBarista`: Read from `orders`, write to `queue`
-* Bridge in the CoffeeShop: `me.escoffier.quarkus.coffeeshop.messaging.KafkaBaristas` just enqueue the orders in a single thread (one counter)
+* Bridge in the CoffeeShop: `me.escoffier.quarkus.coffeeshop.messaging.CoffeeShopResource#messaging` just enqueue the orders in a single thread (one counter)
 * Get prepared beverages on `me.escoffier.quarkus.coffeeshop.dashboard.BoardResource` and send to SSE
 
-* Open browser to http://localhost:8080/queue
+* Open browser to http://localhost:8080/
 * Order coffee with:
 
 ```bash
