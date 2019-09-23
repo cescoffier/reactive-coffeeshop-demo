@@ -36,27 +36,27 @@ public class CoffeeShopResource {
     public Beverage http(Order order) {
         return barista.order(order.setOrderId(UUID.randomUUID().toString()));
     }
-
     @POST
     @Path("/async")
     public CompletionStage<Beverage> async(Order order) {
         return barista.orderAsync(order.setOrderId(UUID.randomUUID().toString()));
     }
 
-    @Inject @Stream("orders")
+    @Inject
+    @Stream("orders")
     Emitter<String> orders;
 
-    @Inject @Stream("queue")
-    Emitter<String> queue;
+    @Inject
+    @Stream("queue")
+    Emitter<String> states;
 
     @POST
     @Path("/messaging")
     public Order messaging(Order order) {
         order.setOrderId(UUID.randomUUID().toString());
-        queue.send(PreparationState.queued(order));
+        states.send(PreparationState.queued(order));
         orders.send(jsonb.toJson(order));
         return order;
     }
-
 
 }

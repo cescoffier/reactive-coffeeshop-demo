@@ -1,8 +1,11 @@
 package me.escoffier.quarkus.coffeeshop.model;
 
+import io.quarkus.runtime.annotations.RegisterForReflection;
+
 import javax.json.bind.Jsonb;
 import javax.json.bind.JsonbBuilder;
 
+@RegisterForReflection
 public class PreparationState {
 
     Beverage beverage;
