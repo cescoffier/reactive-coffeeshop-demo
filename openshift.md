@@ -15,14 +15,15 @@ Before running the following command, build the native executable.
 Be sure to generate the Linux 64 bits executable.
 
 ```bash
-cd cofeeshop-service
+cd coffeeshop-service
 oc new-build --name=coffee-shop \
   --binary=true \
   --docker-image=quay.io/quarkus/ubi-quarkus-native-binary-s2i:19.2.0
   
-oc start-build coffee-shop --from-file target/coffeeshop-service-1.0-SNAPSHOT-runner 
+oc start-build coffee-shop --from-file target/coffeeshop-service-1.0-SNAPSHOT-runner
+sleep 10 
 oc new-app -i coffee-shop  
-oc expose svc/cofee-shop
+oc expose svc/coffee-shop
 ```
 
 ## Kafka Barista
@@ -37,5 +38,6 @@ oc new-build --name=barista-kafka \
   --docker-image=quay.io/quarkus/ubi-quarkus-native-binary-s2i:19.2.0
   
 oc start-build barista-kafka --from-file target/*-runner
+sleep 10
 oc new-app -i barista-kafka  
 ```
