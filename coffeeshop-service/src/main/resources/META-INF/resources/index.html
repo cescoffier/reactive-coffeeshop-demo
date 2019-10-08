@@ -11,7 +11,49 @@
 </head>
 <body>
 
+<div class="container">
 
+    <h1>Order</h1>
+
+    <form id="orderForm" class="form-horizontal">
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="customerName">Name</label>
+            <div class="col-md-6">
+                <input type="text" id="customerName" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="orderMethod">Order method</label>
+            <div class="col-md-10">
+                <select id="orderMethod">
+                    <option value="http">HTTP</option>
+                    <option value="messaging">Messaging</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-2 control-label" for="product">Product</label>
+            <div class="col-md-10">
+                <select id="product">
+                    <option value="frappuccino">Frappuccino</option>
+                    <option value="chai">Chai</option>
+                    <option value="hot-chocolate">Hot Chocolate</option>
+                    <option value="latte">Latte</option>
+                    <option value="espresso">Espresso</option>
+                    <option value="mocha">Mocha</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-10 col-md-offset-2">
+                <button id="order-button" type="submit" class="btn btn-primary">Place order</button>
+            </div>
+        </div>
+    </form>
+
+</div>
+
+<div class="container" id="order-result-message"></div>
 
 <div class="container">
 
@@ -20,9 +62,8 @@
     <table class="table table-striped">
         <thead class="thead-dark">
         <tr>
-            <th>Order Id</th>
+            <th>Customer</th>
             <th>Product</th>
-            <th>For</th>
             <th>Prepared By</th>
             <th>State</th>
         </tr>
@@ -35,6 +76,9 @@
 </div>
 
 
+
+
+
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
@@ -42,12 +86,59 @@
 
 <script>
 
+    $("#orderForm").submit(function(event){
+        var method = $("#orderMethod option:selected").val();
+        var order = new Object();
+        order.name = $("#customerName").val();
+        console.log("Customer name = " + order.name);
+        order.product = $("#product option:selected").val();
+        if(method=="http") {
+            var state = new Object();
+            state.order = order;
+            state.state = "IN_PROGRESS"
+            $("tbody").append(line(state));
+            $("#order-button").addClass("disabled").attr("disabled", true);
+        }
+
+        event.preventDefault(); //prevent default action 
+        var post_url = "/" + method; //get form action url
+        var request_method = "POST"; //get form GET/POST method
+        
+        $.ajax({
+            url : post_url,
+            type: request_method,
+            data : JSON.stringify(order),
+            contentType: 'application/json',
+            cache: false
+        }).done(function(response){
+            if(method=="http") {
+                var state = new Object();
+                order.orderId = response.orderId;
+                state.order = order;
+                state.beverage = new Object();
+                state.beverage.preparedBy = response.preparedBy;
+                state.state = "READY";
+                $('tbody tr:last').replaceWith(line(state));
+                $("#order-button").removeClass("disabled").removeAttr("disabled");
+            }
+        }).fail(function(err) {
+            $("#order-result-message").append("<div class='alert alert-danger alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-label='Close'><span class='pficon pficon-close'></span></button><span class='pficon pficon-error-circle-o'></span><strong>Error</strong>" + err.responseText + "</div>");
+            $('tbody tr:last').remove();
+            $("#order-button").removeClass("disabled").removeAttr("disabled");
+            console.error(err);
+        });
+    });
+
     $(function () {
         var source = new EventSource("http://localhost:8080/queue");
         source.onmessage = function(e) {
             console.log(e);
             var state = JSON.parse(e.data);
-            $("tbody").append(line(state));
+            if(state.state=="IN_QUEUE")
+                $("tbody").append(line(state));
+            if(state.state=="READY")
+                $("#"+state.order.orderId).replaceWith(line(state));
+            
         };
     });
 
@@ -59,10 +150,9 @@
         if (state.beverage) {
             barista = state.beverage.preparedBy;
         }
-        return "<tr>" +
-            "<td>" + id + "</td>" +
-            "<td>" + product + "</td>" +
+        return "<tr id='" + id + "'>" +
             "<td>" + customer + "</td>" +
+            "<td>" + product + "</td>" +
             "<td>" + barista + "</td>" +
             "<td>" + state.state + "</td></tr>";
     }
