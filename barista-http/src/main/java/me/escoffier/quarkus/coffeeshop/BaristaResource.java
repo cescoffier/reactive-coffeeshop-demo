@@ -1,7 +1,5 @@
 package me.escoffier.quarkus.coffeeshop;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
-
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -12,6 +10,8 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static me.escoffier.quarkus.coffeeshop.Names.pickAName;
+
 @Path("/barista")
 @Produces(MediaType.APPLICATION_JSON)
 public class BaristaResource {
@@ -20,8 +20,7 @@ public class BaristaResource {
 
     private Random random = new Random();
 
-    @ConfigProperty(name = "barista.name")
-    String name;
+    private String name = pickAName();
 
     @POST
     public CompletionStage<Beverage> prepare(Order order) {
@@ -44,6 +43,5 @@ public class BaristaResource {
         return new Beverage(order, name);
 
     }
-
 
 }
