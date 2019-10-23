@@ -27,7 +27,7 @@
             <div class="col-md-10">
                 <select id="orderMethod">
                     <option value="http">HTTP</option>
-                    <option value="messaging">Messaging</option>
+                    <option value="messaging">Messaging / Kafka</option>
                 </select>
             </div>
         </div>
@@ -88,14 +88,14 @@
 
     $("#orderForm").submit(function(event){
         var method = $("#orderMethod option:selected").val();
-        var order = new Object();
+        var order = {};
         order.name = $("#customerName").val();
         console.log("Customer name = " + order.name);
         order.product = $("#product option:selected").val();
-        if(method=="http") {
-            var state = new Object();
+        if(method==="http") {
+            var state = {};
             state.order = order;
-            state.state = "IN_PROGRESS"
+            state.state = "IN_PROGRESS";
             $("tbody").append(line(state));
             $("#order-button").addClass("disabled").attr("disabled", true);
         }
@@ -111,11 +111,11 @@
             contentType: 'application/json',
             cache: false
         }).done(function(response){
-            if(method=="http") {
-                var state = new Object();
+            if(method==="http") {
+                var state = {};
                 order.orderId = response.orderId;
                 state.order = order;
-                state.beverage = new Object();
+                state.beverage = {};
                 state.beverage.preparedBy = response.preparedBy;
                 state.state = "READY";
                 $('tbody tr:last').replaceWith(line(state));

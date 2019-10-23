@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>0.21.2</quarkus.version>
+        <quarkus.version>0.25.0</quarkus.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>

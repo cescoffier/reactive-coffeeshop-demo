@@ -1,5 +1,6 @@
 package me.escoffier.quarkus.coffeeshop.dashboard;
 
+import io.smallrye.reactive.messaging.annotations.Channel;
 import io.smallrye.reactive.messaging.annotations.Stream;
 import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
 import org.reactivestreams.Publisher;
@@ -14,7 +15,7 @@ import javax.ws.rs.core.MediaType;
 public class BoardResource {
 
     @Inject
-    @Stream("beverages")
+    @Channel("beverages")
     PublisherBuilder<String> queue;
 
     @GET

@@ -10,6 +10,8 @@ import javax.json.bind.JsonbBuilder;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
 @ApplicationScoped
 public class KafkaBarista {
@@ -29,16 +31,15 @@ public class KafkaBarista {
                 .thenApply(beverage -> PreparationState.ready(order, beverage));
     }
 
-
-
-
     private CompletionStage<Beverage> makeIt(Order order) {
         return CompletableFuture.supplyAsync(() -> {
             System.out.println("Preparing a " + order.getProduct());
             prepare();
             return new Beverage(order, name);
-        });
+        }, executor);
     }
+
+    private Executor executor = Executors.newSingleThreadExecutor();
 
     private void prepare() {
         try {
