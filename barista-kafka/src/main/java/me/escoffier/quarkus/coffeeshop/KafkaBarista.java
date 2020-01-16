@@ -2,6 +2,8 @@ package me.escoffier.quarkus.coffeeshop;
 
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
 import javax.json.bind.Jsonb;
@@ -9,40 +11,43 @@ import javax.json.bind.JsonbBuilder;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import static me.escoffier.quarkus.coffeeshop.Names.pickAName;
 
 @ApplicationScoped
 public class KafkaBarista {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger("Kafka-Barista");
+
     private String name = pickAName();
 
-    private Jsonb jsonb = JsonbBuilder.create();
-    private Random random = new Random();
+    private ExecutorService queue = Executors.newSingleThreadExecutor();
 
     @Incoming("orders")
     @Outgoing("queue")
-    public CompletionStage<String> prepare(String message) {
-        Order order = jsonb.fromJson(message, Order.class);
-        System.out.println("Barista " + name + " is going to prepare a " + order.getProduct());
-        return makeIt(order)
-                .thenApply(beverage -> PreparationState.ready(order, beverage));
-    }
-
-    private CompletionStage<Beverage> makeIt(Order order) {
+    public CompletionStage<Beverage> process(Order order) {
         return CompletableFuture.supplyAsync(() -> {
-            System.out.println("Preparing a " + order.getProduct());
-            prepare();
-            return new Beverage(order, name);
-        });
+            Beverage coffee = prepare(order);
+            LOGGER.info("Order {} for {} is ready", order.getProduct(), order.getName());
+            return coffee;
+        }, queue);
     }
 
-    private void prepare() {
+    Beverage prepare(Order order) {
+        int delay = getPreparationTime();
         try {
-            Thread.sleep(random.nextInt(5000));
+            Thread.sleep(delay);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
+        return new Beverage(order, name, Beverage.State.READY);
+    }
+
+    private Random random = new Random();
+    int getPreparationTime() {
+        return random.nextInt(5) * 1000;
     }
 
 }
