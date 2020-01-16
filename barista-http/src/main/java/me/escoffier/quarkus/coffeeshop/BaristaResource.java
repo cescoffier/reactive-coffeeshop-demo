@@ -1,5 +1,8 @@
 package me.escoffier.quarkus.coffeeshop;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -16,32 +19,34 @@ import static me.escoffier.quarkus.coffeeshop.Names.pickAName;
 @Produces(MediaType.APPLICATION_JSON)
 public class BaristaResource {
 
-    private ExecutorService barista = Executors.newSingleThreadExecutor();
+    private static final Logger LOGGER = LoggerFactory.getLogger("HTTP-Barista");
 
-    private Random random = new Random();
+    private ExecutorService queue = Executors.newSingleThreadExecutor();
 
     private String name = pickAName();
 
     @POST
-    public CompletionStage<Beverage> prepare(Order order) {
+    public CompletionStage<Beverage> process(Order order) {
         return CompletableFuture.supplyAsync(() -> {
-            Beverage beverage = makeIt(order);
-            System.out.println("Order " + order.getProduct() + " for " + order.getName() + " is ready");
-            return beverage;
-        }, barista);
+            Beverage coffee = prepare(order);
+            LOGGER.info("Order {} for {} is ready", order.getProduct(), order.getName());
+            return coffee;
+        }, queue);
     }
 
-    private Beverage makeIt(Order order) {
-        int delay = random.nextInt(5) * 1000;
-
+    Beverage prepare(Order order) {
+        int delay = getPreparationTime();
         try {
             Thread.sleep(delay);
         } catch (InterruptedException e) {
-            // Ignored
             Thread.currentThread().interrupt();
         }
         return new Beverage(order, name);
+    }
 
+    private Random random = new Random();
+    int getPreparationTime() {
+        return random.nextInt(5) * 1000;
     }
 
 }
