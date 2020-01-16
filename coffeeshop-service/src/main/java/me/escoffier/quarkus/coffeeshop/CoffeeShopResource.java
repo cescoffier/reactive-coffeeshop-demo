@@ -1,15 +1,13 @@
 package me.escoffier.quarkus.coffeeshop;
 
+import io.smallrye.reactive.messaging.annotations.Channel;
 import io.smallrye.reactive.messaging.annotations.Emitter;
-import io.smallrye.reactive.messaging.annotations.Stream;
 import me.escoffier.quarkus.coffeeshop.http.BaristaService;
 import me.escoffier.quarkus.coffeeshop.model.Beverage;
 import me.escoffier.quarkus.coffeeshop.model.Order;
-import me.escoffier.quarkus.coffeeshop.model.PreparationState;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
 
 import javax.inject.Inject;
-import javax.json.bind.Jsonb;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
@@ -24,39 +22,41 @@ import java.util.concurrent.CompletionStage;
 public class CoffeeShopResource {
 
     @Inject
-    Jsonb jsonb;
-
-    @Inject
     @RestClient
     BaristaService barista;
-
 
     @POST
     @Path("/http")
     public Beverage http(Order order) {
-        return barista.order(order.setOrderId(UUID.randomUUID().toString()));
+        return barista.order(order.setOrderId(getId()));
     }
+
     @POST
     @Path("/async")
     public CompletionStage<Beverage> async(Order order) {
-        return barista.orderAsync(order.setOrderId(UUID.randomUUID().toString()));
+        return barista.orderAsync(order.setOrderId(getId()));
     }
 
     @Inject
-    @Stream("orders")
-    Emitter<String> orders;
+    @Channel("orders")
+    Emitter<Order> orders;
 
     @Inject
-    @Stream("queue")
-    Emitter<String> states;
+    @Channel("queue")
+    Emitter<Beverage> states;
 
     @POST
     @Path("/messaging")
     public Order messaging(Order order) {
-        order.setOrderId(UUID.randomUUID().toString());
-        states.send(PreparationState.queued(order));
-        orders.send(jsonb.toJson(order));
+        System.out.println(order.getName() + " / " + order.getProduct());
+        order.setOrderId(getId());
+        states.send(Beverage.queued(order));
+        orders.send(order);
         return order;
+    }
+
+    private String getId() {
+        return UUID.randomUUID().toString();
     }
 
 }

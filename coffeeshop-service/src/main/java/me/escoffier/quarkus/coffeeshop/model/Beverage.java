@@ -9,17 +9,28 @@ public class Beverage {
     private String customer;
     private String preparedBy;
     private String orderId;
-
+    private State preparationState;
 
     public Beverage() {
 
     }
 
-    public Beverage(Order order, String baristaName) {
+    public static Beverage queued(Order order) {
+        return new Beverage(order, null, State.IN_QUEUE);
+    }
+
+    public enum State {
+        IN_QUEUE,
+        BEING_PREPARED,
+        READY;
+    }
+
+    public Beverage(Order order, String baristaName, State state) {
         this.beverage = order.getProduct();
         this.customer = order.getName();
         this.orderId = order.getOrderId();
         this.preparedBy = baristaName;
+        this.preparationState = state;
     }
 
     public String getBeverage() {
@@ -55,6 +66,15 @@ public class Beverage {
 
     public Beverage setOrderId(String orderId) {
         this.orderId = orderId;
+        return this;
+    }
+
+    public State getPreparationState() {
+        return preparationState;
+    }
+
+    public Beverage setPreparationState(State preparationState) {
+        this.preparationState = preparationState;
         return this;
     }
 }

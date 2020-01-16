@@ -87,22 +87,26 @@
 <script>
 
     $("#orderForm").submit(function(event){
-        var method = $("#orderMethod option:selected").val();
-        var order = new Object();
-        order.name = $("#customerName").val();
+        const method = $("#orderMethod option:selected").val();
+        const order = {
+            name: $("#customerName").val(),
+            product: $("#product option:selected").val()
+        };
         console.log("Customer name = " + order.name);
-        order.product = $("#product option:selected").val();
-        if(method=="http") {
-            var state = new Object();
-            state.order = order;
-            state.state = "IN_PROGRESS"
-            $("tbody").append(line(state));
+
+        if(method==="http") {
+            const state = {
+                customer: order.name,
+                beverage: order.product,
+                preparationState: "IN_PROGRESS"
+            };
+            $("tbody").prepend(line(state));
             $("#order-button").addClass("disabled").attr("disabled", true);
         }
 
-        event.preventDefault(); //prevent default action 
-        var post_url = "/" + method; //get form action url
-        var request_method = "POST"; //get form GET/POST method
+        event.preventDefault();
+        const post_url = "/" + method; //get form action url
+        const request_method = "POST"; //get form GET/POST method
         
         $.ajax({
             url : post_url,
@@ -112,13 +116,14 @@
             cache: false
         }).done(function(response){
             if(method==="http") {
-                var state = {};
-                order.orderId = response.orderId;
-                state.order = order;
-                state.beverage = {};
-                state.beverage.preparedBy = response.preparedBy;
-                state.state = "READY";
-                $('tbody tr:last').replaceWith(line(state));
+                const state = {
+                    orderId: response.orderId,
+                    customer: order.name,
+                    beverage: order.product,
+                    preparedBy: response.preparedBy,
+                    preparationState: "READY"
+                };
+                $('tbody tr:first').replaceWith(line(state));
                 $("#order-button").removeClass("disabled").removeAttr("disabled");
             }
         }).fail(function(err) {
@@ -130,31 +135,34 @@
     });
 
     $(function () {
-        var source = new EventSource("/queue");
+        const source = new EventSource("/queue");
         source.onmessage = function(e) {
+            if (e.data === "{}") {
+                return;
+            }
             console.log(e);
-            var state = JSON.parse(e.data);
-            if(state.state=="IN_QUEUE")
-                $("tbody").append(line(state));
-            if(state.state=="READY")
-                $("#"+state.order.orderId).replaceWith(line(state));
+            const beverage = JSON.parse(e.data);
+            if(beverage.preparationState==="IN_QUEUE")
+                $("tbody").prepend(line(beverage));
+            if(beverage.preparationState==="READY")
+                $("#"+beverage.orderId).replaceWith(line(beverage));
             
         };
     });
 
-    function line(state) {
-        var id = state.order.orderId;
-        var product = state.order.product;
-        var customer = state.order.name;
-        var barista = "";
-        if (state.beverage) {
-            barista = state.beverage.preparedBy;
+    function line(order) {
+        const id = order.orderId;
+        const product = order.beverage;
+        const customer = order.customer;
+        let barista = "";
+        if (order.preparedBy) {
+            barista = order.preparedBy;
         }
         return "<tr id='" + id + "'>" +
             "<td>" + customer + "</td>" +
             "<td>" + product + "</td>" +
             "<td>" + barista + "</td>" +
-            "<td>" + state.state + "</td></tr>";
+            "<td>" + order.preparationState + "</td></tr>";
     }
 
 
