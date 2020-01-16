@@ -1,6 +1,5 @@
 package me.escoffier.quarkus.coffeeshop;
 
-import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.eclipse.microprofile.reactive.messaging.Incoming;
 import org.eclipse.microprofile.reactive.messaging.Outgoing;
 
@@ -11,11 +10,12 @@ import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
 
+import static me.escoffier.quarkus.coffeeshop.Names.pickAName;
+
 @ApplicationScoped
 public class KafkaBarista {
 
-    @ConfigProperty(name = "barista.name")
-    String name;
+    private String name = pickAName();
 
     private Jsonb jsonb = JsonbBuilder.create();
     private Random random = new Random();
@@ -28,9 +28,6 @@ public class KafkaBarista {
         return makeIt(order)
                 .thenApply(beverage -> PreparationState.ready(order, beverage));
     }
-
-
-
 
     private CompletionStage<Beverage> makeIt(Order order) {
         return CompletableFuture.supplyAsync(() -> {

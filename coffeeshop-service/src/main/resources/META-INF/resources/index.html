@@ -111,11 +111,11 @@
             contentType: 'application/json',
             cache: false
         }).done(function(response){
-            if(method=="http") {
-                var state = new Object();
+            if(method==="http") {
+                var state = {};
                 order.orderId = response.orderId;
                 state.order = order;
-                state.beverage = new Object();
+                state.beverage = {};
                 state.beverage.preparedBy = response.preparedBy;
                 state.state = "READY";
                 $('tbody tr:last').replaceWith(line(state));
@@ -130,7 +130,7 @@
     });
 
     $(function () {
-        var source = new EventSource("http://localhost:8080/queue");
+        var source = new EventSource("/queue");
         source.onmessage = function(e) {
             console.log(e);
             var state = JSON.parse(e.data);
