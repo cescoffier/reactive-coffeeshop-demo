@@ -2,9 +2,7 @@ package me.escoffier.quarkus.coffeeshop.dashboard;
 
 import io.reactivex.Flowable;
 import io.smallrye.reactive.messaging.annotations.Channel;
-import io.smallrye.reactive.messaging.annotations.Stream;
 import me.escoffier.quarkus.coffeeshop.model.Beverage;
-import org.eclipse.microprofile.reactive.streams.operators.PublisherBuilder;
 import org.reactivestreams.Publisher;
 
 import javax.inject.Inject;

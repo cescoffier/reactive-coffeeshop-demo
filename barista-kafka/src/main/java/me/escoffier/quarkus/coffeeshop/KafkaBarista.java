@@ -6,8 +6,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.enterprise.context.ApplicationScoped;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionStage;
@@ -46,6 +44,7 @@ public class KafkaBarista {
     }
 
     private Random random = new Random();
+
     int getPreparationTime() {
         return random.nextInt(5) * 1000;
     }

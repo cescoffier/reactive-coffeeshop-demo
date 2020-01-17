@@ -48,7 +48,6 @@ public class CoffeeShopResource {
     @POST
     @Path("/messaging")
     public Order messaging(Order order) {
-        System.out.println(order.getName() + " / " + order.getProduct());
         order.setOrderId(getId());
         states.send(Beverage.queued(order));
         orders.send(order);
