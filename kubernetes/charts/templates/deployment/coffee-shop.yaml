@@ -1,0 +1,27 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: coffee-shop
+spec:
+  replicas: {{ .Values.coffeeshopService.replicaCount }}
+  selector:
+    matchLabels:
+      app: coffee-shop
+  template:
+    metadata:
+      labels:
+        app: coffee-shop
+    spec:
+      containers:
+        - name: coffee-shop
+          image: "{{ .Values.coffeeshopService.image.repository }}:{{ .Values.coffeeshopService.image.version }}"
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: {{ .Values.coffeeshopService.image.pullPolicy }}
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "{{ .Values.kafka.bootstrap.service }}.{{ .Values.kafka.namespace }}:{{ .Values.kafka.bootstrap.port }}"
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"
+            - name: ME_ESCOFFIER_QUARKUS_COFFEESHOP_HTTP_BARISTASERVICE_MP_REST_URL
+              value: http://barista-http:8080

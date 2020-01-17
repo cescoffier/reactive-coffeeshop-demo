@@ -1,11 +1,11 @@
 apiVersion: kafka.strimzi.io/v1beta1
 kind: Kafka
 metadata:
-  name: my-kafka
-  namespace: reactive-demo
+  name: my-cluster
+  namespace: kafka
 spec:
   kafka:
-    version: 2.3.0
+    version: 2.4.0
     replicas: 3
     listeners:
       plain: {}

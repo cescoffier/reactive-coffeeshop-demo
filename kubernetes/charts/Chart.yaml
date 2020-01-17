@@ -1,0 +1,19 @@
+---
+apiVersion: v2
+name: coffeeshop-chart
+description: A Helm chart for the coffee-shop demo
+
+# Keda chart must be installed manually first (into its own namespace).
+#  - name: keda
+#    version: 1.0.0
+#    repository: https://kedacore.github.io/charts/
+
+# Strimzi chart must be installed manually first (into its own namespace).
+# The Kafka cluster should then be created (into Values.kafka.namespace, which defaults to 'kafka').
+#  - name: strimzi-kafka-operator
+#    version: 0.14.0
+#    repository: https://strimzi.io/charts/
+
+type: application
+version: 0.1.0 # chart version
+appVersion: 0.1.0 # application version

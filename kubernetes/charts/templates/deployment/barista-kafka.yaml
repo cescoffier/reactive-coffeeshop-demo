@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: barista-kafka
+spec:
+  replicas: {{ .Values.baristaKafka.replicaCount }}
+  selector:
+    matchLabels:
+      app: barista-kafka
+  template:
+    metadata:
+      labels:
+        app: barista-kafka
+    spec:
+      containers:
+        - name: barista-kafka
+          image: "{{ .Values.baristaKafka.image.repository }}:{{ .Values.baristaKafka.image.version }}"
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: {{ .Values.baristaKafka.image.pullPolicy }}
+          livenessProbe:
+            httpGet:
+              path: /
+              port: 8080
+            periodSeconds: 1
+            failureThreshold: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8080
+          env:
+            - name: KAFKA_BOOTSTRAP_SERVERS
+              value: "{{ .Values.kafka.bootstrap.service }}.{{ .Values.kafka.namespace }}:{{ .Values.kafka.bootstrap.port }}"
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"

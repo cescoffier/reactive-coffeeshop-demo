@@ -49,7 +49,7 @@ mvn compile quarkus:dev
 
 ```bash
 cd barista-http
-java -Dbarista.name=tom -jar target/barista-http-1.0-SNAPSHOT-runner.jar
+java -jar target/barista-http-1.0-SNAPSHOT-runner.jar
 ```
 
 ```bash
@@ -65,16 +65,7 @@ The first part of the demo shows HTTP interactions:
 * CoffeeShop code: `me.escoffier.quarkus.coffeeshop.CoffeeShopResource.http`
 * Generated client: `me.escoffier.quarkus.coffeeshop.http.BaristaService`
 
-Order coffees with:
-
-```bash
-while [ true ]
-do
-http POST :8080/http product=latte name=clement
-http POST :8080/http product=expresso name=neo
-http POST :8080/http product=mocha name=flore
-done
-```
+Order coffees by opening `http://localhost:8080`. Select the HTTP method.
 
 Stop the HTTP Barista, you can't order coffee anymore.
 
@@ -85,23 +76,12 @@ Stop the HTTP Barista, you can't order coffee anymore.
 * Get prepared beverages on `me.escoffier.quarkus.coffeeshop.dashboard.BoardResource` and send to SSE
 
 * Open browser to http://localhost:8080/
-* Order coffee with:
-
-```bash
-http POST :8080/messaging product=latte name=clement
-http POST :8080/messaging product=expresso name=neo
-http POST :8080/messaging product=mocha name=flore
-```
+* Order coffee with Order coffees by opening `http://localhost:8080`. Select the HTTP method. Select the messaging method.
 
 # Baristas do breaks
 
 1. Stop the Kafka barista
 1. Continue to enqueue order
-```bash
-http POST :8080/messaging product=frappuccino name=clement
-http POST :8080/messaging product=chai name=neo
-http POST :8080/messaging product=hot-chocolate name=flore
-```
 1. On the dashboard, the orders are in the "IN QUEUE" state
 1. Restart the barista
 1. They are processed
@@ -110,16 +90,8 @@ http POST :8080/messaging product=hot-chocolate name=flore
 
 1. Start a second barista with: 
 ```bash
-java -Dquarkus.http.port=9095 -Dbarista.name=tom -jar target/barista-kafka-1.0-SNAPSHOT-runner.jar
+./barista-kafka/target/barista-kafka-1.0-SNAPSHOT-runner -Dquarkus.http.port=9999
 ```
 1. Order more coffee
-```bash
-http POST :8080/messaging product=frappuccino name=clement
-http POST :8080/messaging product=chai name=neo
-http POST :8080/messaging product=hot-chocolate name=flore
-http POST :8080/messaging product=latte name=clement
-http POST :8080/messaging product=expresso name=neo
-http POST :8080/messaging product=mocha name=flore
-```
 
 The dashboard shows that the load is dispatched among the baristas.

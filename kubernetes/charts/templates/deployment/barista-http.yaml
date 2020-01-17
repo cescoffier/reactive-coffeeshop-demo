@@ -1,0 +1,23 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: barista-http
+spec:
+  replicas: {{ .Values.baristaHttp.replicaCount }}
+  selector:
+    matchLabels:
+      app: barista-http
+  template:
+    metadata:
+      labels:
+        app: barista-http
+    spec:
+      containers:
+        - name: barista-http
+          image: "{{ .Values.baristaHttp.image.repository }}:{{ .Values.baristaHttp.image.version }}"
+          ports:
+            - containerPort: 8080
+          imagePullPolicy: {{ .Values.baristaHttp.image.pullPolicy }}
+          env:
+            - name: QUARKUS_HTTP_PORT
+              value: "8080"

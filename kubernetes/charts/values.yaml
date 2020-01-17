@@ -1,0 +1,41 @@
+---
+baristaKafka:
+  replicaCount: 1
+  image:
+    repository: image-registry.openshift-image-registry.svc:5000/coffee/barista-kafka
+    version: latest
+    pullPolicy: IfNotPresent
+
+baristaHttp:
+  replicaCount: 1
+  image:
+    repository: image-registry.openshift-image-registry.svc:5000/coffee/barista-http
+    version: latest
+    pullPolicy: IfNotPresent
+
+coffeeshopService:
+  replicaCount: 1
+  image:
+    repository: image-registry.openshift-image-registry.svc:5000/coffee/coffee-shop
+    version: latest
+    pullPolicy: IfNotPresent
+
+# The namespace and service name for the Kafka server.
+kafka:
+  namespace: kafka
+  cluster: my-cluster
+  bootstrap:
+    service: my-cluster-kafka-bootstrap
+    port: 9092
+
+resources: {}
+  # We usually recommend not to specify default resources and to leave this as a conscious
+  # choice for the user. This also increases chances charts run on environments with little
+  # resources, such as Minikube. If you do want to specify resources, uncomment the following
+  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+  # limits:
+  #  cpu: 100m
+  #  memory: 128Mi
+  # requests:
+  #  cpu: 100m
+#  memory: 128Mi
