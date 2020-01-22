@@ -32,6 +32,9 @@ Be sure to be authenticated to the registry you are going to push to. For instan
 docker login -u $KUBERNETES_USER -p  $KUBERNETES_TOKEN $REGISTRY
 ```
 
+NOTE: On OpenShift, if enabled, you can access the internal registry. First, get the url using:
+`export REGISTRY=$(oc get route -n openshift-image-registry -o jsonpath='{$.items[*].spec.host}')` 
+
 From the project root run:
 
 ```bash
@@ -81,7 +84,7 @@ Then, from the project root, run:
 
 ```shell 
 helm install coffee-v1 kubernetes/charts  -n coffee --wait --timeout 300s
-kubectl apply -f kubernetes/route.yaml -n coffee
+oc apply -f kubernetes/route.yaml -n coffee
 export COFFEE_URL="https://$(oc get route -n coffee -o jsonpath='{$.items[*].spec.host}')" 
 echo "Open url: ${COFFEE_URL}"
 ```
@@ -92,4 +95,13 @@ echo "Open url: ${COFFEE_URL}"
 ```shell 
 cd kubernetes
 ./uninstall.sh
+```
+
+## Updating the charts
+
+```shell
+helm uninstall coffee-v1 -n coffee
+oc delete KafkaTopic -name orders -n kafka
+oc delete KafkaTopic -name queue -n kafka
+helm install coffee-v1 kubernetes/charts  -n coffee --wait --timeout 300s
 ```
