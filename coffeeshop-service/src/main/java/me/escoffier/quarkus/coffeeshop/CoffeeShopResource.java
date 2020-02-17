@@ -6,50 +6,36 @@ import me.escoffier.quarkus.coffeeshop.http.BaristaService;
 import me.escoffier.quarkus.coffeeshop.model.Beverage;
 import me.escoffier.quarkus.coffeeshop.model.Order;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.inject.Inject;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.UUID;
-import java.util.concurrent.CompletionStage;
 
-@Path("/")
-@Consumes(MediaType.APPLICATION_JSON)
-@Produces(MediaType.APPLICATION_JSON)
+@RestController
+@RequestMapping("/")
 public class CoffeeShopResource {
 
-    @Inject
+    @Autowired
     @RestClient
     BaristaService barista;
 
-    @POST
-    @Path("/http")
+    @PostMapping("/http")
     public Beverage http(Order order) {
         return barista.order(order.setOrderId(getId()));
     }
 
-    @POST
-    @Path("/async")
-    public CompletionStage<Beverage> async(Order order) {
-        return barista.orderAsync(order.setOrderId(getId()));
-    }
+    // Orders emitter (Order)
+    @Autowired @Channel("orders") Emitter<Order> orders;
 
-    @Inject
-    @Channel("orders")
-    Emitter<Order> orders;
+    // Queue emitter (Beverage)
+    @Autowired @Channel("queue") Emitter<Beverage> beverages;
 
-    @Inject
-    @Channel("queue")
-    Emitter<Beverage> states;
-
-    @POST
-    @Path("/messaging")
+    @PostMapping("/messaging")
     public Order messaging(Order order) {
         order.setOrderId(getId());
-        states.send(Beverage.queued(order));
+        beverages.send(Beverage.queued(order));
         orders.send(order);
         return order;
     }
