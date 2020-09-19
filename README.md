@@ -76,7 +76,7 @@ Stop the HTTP Barista, you can't order coffee anymore.
 * Get prepared beverages on `me.escoffier.quarkus.coffeeshop.dashboard.BoardResource` and send to SSE
 
 * Open browser to http://localhost:8080/
-* Order coffee with Order coffees by opening `http://localhost:8080`. Select the HTTP method. Select the messaging method.
+* Order coffee with Order coffees by opening `http://localhost:8080`. Select the messaging method.
 
 # Baristas do breaks
 
@@ -88,10 +88,14 @@ Stop the HTTP Barista, you can't order coffee anymore.
 
 # 2 baristas are better
 
+1. Build `barista-kafka` with native image:
+   ```bash
+   mvn package -Pnative
+   ```
 1. Start a second barista with: 
-```bash
-./barista-kafka/target/barista-kafka-1.0-SNAPSHOT-runner -Dquarkus.http.port=9999
-```
+    ```bash
+    ./barista-kafka/target/barista-kafka-1.0-SNAPSHOT-runner -Dquarkus.http.port=9999
+    ```
 1. Order more coffee
 
 The dashboard shows that the load is dispatched among the baristas.
