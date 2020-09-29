@@ -27,7 +27,7 @@ public class CoffeeShopResource {
     public Uni<Beverage> http(Order order) {
         return barista.order(order.setOrderId(getId()))
                 .onItem().invoke(beverage -> beverage.setPreparationState(Beverage.State.READY))
-                .ifNoItem().after(Duration.ofMillis(1500)).recoverWithItem(createFallbackBeverage(order))
+                .ifNoItem().after(Duration.ofMillis(1500)).fail()
                 .onFailure().recoverWithItem(createFallbackBeverage(order));
     }
 
