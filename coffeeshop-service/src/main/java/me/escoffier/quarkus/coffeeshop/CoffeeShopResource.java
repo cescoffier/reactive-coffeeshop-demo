@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.time.Duration;
 import java.util.UUID;
 
 @RestController
@@ -24,7 +25,14 @@ public class CoffeeShopResource {
 
     @PostMapping("/http")
     public Uni<Beverage> http(Order order) {
-        return barista.order(order.setOrderId(getId()));
+        return barista.order(order.setOrderId(getId()))
+                .onItem().invoke(beverage -> beverage.setPreparationState(Beverage.State.READY))
+                .ifNoItem().after(Duration.ofMillis(1500)).recoverWithItem(createFallbackBeverage(order))
+                .onFailure().recoverWithItem(createFallbackBeverage(order));
+    }
+
+    private Beverage createFallbackBeverage(Order order) {
+        return new Beverage(order, null, Beverage.State.FAILED);
     }
 
     // Orders emitter (orders)
