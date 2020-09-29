@@ -121,7 +121,7 @@
                     customer: order.name,
                     beverage: order.product,
                     preparedBy: response.preparedBy,
-                    preparationState: "READY"
+                    preparationState: response.preparationState
                 };
                 $('tbody tr:first').replaceWith(line(state));
                 $("#order-button").removeClass("disabled").removeAttr("disabled");

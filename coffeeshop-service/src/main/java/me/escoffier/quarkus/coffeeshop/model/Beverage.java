@@ -22,7 +22,8 @@ public class Beverage {
     public enum State {
         IN_QUEUE,
         BEING_PREPARED,
-        READY;
+        READY,
+        FAILED;
     }
 
     public Beverage(Order order, String baristaName, State state) {

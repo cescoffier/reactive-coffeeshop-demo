@@ -35,7 +35,7 @@ public class BoardResource {
 
     Multi<String> getPingStream() {
         return Multi.createFrom().ticks().every(Duration.ofSeconds(10))
-                .onItem().apply(x -> "{}");
+                .onItem().transform(x -> "{}");
     }
 
 }
