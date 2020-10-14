@@ -25,26 +25,6 @@ public class KafkaBarista {
         return prepare(order);
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     Beverage prepare(Order order) {
         int delay = getPreparationTime();
         try {
