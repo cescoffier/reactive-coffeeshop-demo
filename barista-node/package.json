@@ -1,0 +1,17 @@
+{
+  "name": "barista-kafka-node",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node ."
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^4.1.0",
+    "kafkajs": "^1.14.0"
+  },
+  "devDependencies": {}
+}
