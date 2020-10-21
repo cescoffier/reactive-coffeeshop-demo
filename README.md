@@ -34,26 +34,21 @@ brew install kafka
 
 or on Linux
 
-Install recent kafka from <a href="https://kafka.apache.org/downloads">kafka</a> binaries and
-ensure the bin directory is in your path.
+* install recent kafka from <a href="https://kafka.apache.org/downloads">kafka</a> binaries and
+  ensure the bin directory is in your path.
 
-Edit create-topics.sh and add the following just after the first line:
+* edit create-topics.sh and replace all instances of`kafka-topics` with `kafka-topics.sh`
 
+* clone the wurstmeister/kafka-docker github repo to start the kafka server:
 
-```bash
-alias kafka-topics=kafka-topics.sh
-```
+  ```bash
+  git clone https://github.com/wurstmeister/kafka-docker
+  cd kafka-docker
+  ```
 
-Then clone use the wurstmeister/kafka-docker github repo to start the kafka server:
-
-```bash
-git clone https://github.com/wurstmeister/kafka-docker
-cd kafka-docker
-```
-
-and then edit `docker-compose.yml` to
-* set the ports for kafka to be `   - "9092:9092"`
-* set the KAFKA_ADVERTISED_HOST_NAME variable to localhost.
+  and then edit `docker-compose.yml` to
+  * set the ports for kafka to be `   - "9092:9092"`
+  * set the KAFKA_ADVERTISED_HOST_NAME variable to localhost.
 
 Run Kafka with:
 
