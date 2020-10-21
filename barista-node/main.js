@@ -23,7 +23,6 @@ const run = async () => {
       const beverage = await barista.prepare(order);
       logger.info(`Order ${order.orderId} for ${order.name} is ready`);
 
-      await producer.connect();
       await producer.send({
         topic: 'queue',
         messages: [{ value: JSON.stringify({ ...beverage }) }],
