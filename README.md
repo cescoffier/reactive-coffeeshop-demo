@@ -37,7 +37,7 @@ or on Linux
 * install recent kafka from <a href="https://kafka.apache.org/downloads">kafka</a> binaries and
   ensure the bin directory is in your path.
 
-* edit create-topics.sh and replace all instances of`kafka-topics` with `kafka-topics.sh`
+* edit create-topics.sh and replace all instances of `kafka-topics` with `kafka-topics.sh`
 
 Run Kafka with:
 
