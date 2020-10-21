@@ -5,6 +5,10 @@ It demonstrates the elasticity and resilience of the system.
 
 ## Build
 
+Install java dependencies (<a href="https://adoptopenjdk.net/installation.html">java 11</a> and
+<a href="https://maven.apache.org/install.html"> are required)
+
+
 ```bash
 mvn clean package
 ```
@@ -17,11 +21,39 @@ cd barista-node/ && npm install
 
 ## Prerequisites
 
+Install <a href="https://docs.docker.com/get-docker/">Docker</a>.
+
+If you are not using a desktop system, install <a href="https://docs.docker.com/compose/install/">Docker Compose</a>.
+
+
 Install Kafka locally for the Kafka tools e.g.
 
 ```bash
 brew install kafka
 ```
+
+or on Linux
+
+Install recent kafka from <a href=""https://kafka.apache.org/downloads>kafka</a> binaries and
+ensure the bin directory is in your path.
+
+Edit create-topics.sh and add the following just after the first line:
+
+
+```bash
+alias kafka-topics=kafka-topics.sh
+```
+
+Then clone use the wurstmeister/kafka-docker github repo to start the kafka server:
+
+```bash
+git clone https://github.com/wurstmeister/kafka-docker
+cd kafka-docker
+```
+
+and then edit `docker-compose.yml` to
+* set the ports for kafka to be `   - "9092:9092"`
+* set the KAFKA_ADVERTISED_HOST_NAME variable to localhost.
 
 Run Kafka with:
 
@@ -43,10 +75,9 @@ Then, create the `orders` topic with `./create-topics.sh`
 You need to run:
 
 * the coffee shop service
-* the HTTP barista
-* the Kafka barista / the Node.js Kafka barista
+* one or more of the the HTTP, Java Kafka or Node.js Kafka baristas
 
-In 3 terminals: 
+In 3 or more terminals: 
 
 ```bash
 cd coffeeshop-service
@@ -95,13 +126,13 @@ Stop the HTTP Barista, you can't order coffee anymore.
 
 # Baristas do breaks
 
-1. Stop the Kafka barista
+1. Stop the Kafka barista(s)
 1. Continue to enqueue order
 1. On the dashboard, the orders are in the "IN QUEUE" state
 1. Restart the barista
 1. They are processed
 
-# 2 baristas are better
+# 2 or more baristas are better
 
 #### Quarkus
 
