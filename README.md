@@ -39,17 +39,6 @@ or on Linux
 
 * edit create-topics.sh and replace all instances of`kafka-topics` with `kafka-topics.sh`
 
-* clone the wurstmeister/kafka-docker github repo to start the kafka server:
-
-  ```bash
-  git clone https://github.com/wurstmeister/kafka-docker
-  cd kafka-docker
-  ```
-
-  and then edit `docker-compose.yml` to
-  * set the ports for kafka to be `   - "9092:9092"`
-  * set the KAFKA_ADVERTISED_HOST_NAME variable to localhost.
-
 Run Kafka with:
 
 ```bash
