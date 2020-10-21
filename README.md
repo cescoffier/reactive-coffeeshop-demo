@@ -6,7 +6,7 @@ It demonstrates the elasticity and resilience of the system.
 ## Build
 
 Install java dependencies (<a href="https://adoptopenjdk.net/installation.html">java 11</a> and
-<a href="https://maven.apache.org/install.html"> are required)
+<a href="https://maven.apache.org/install.html">Maven</a> are required)
 
 
 ```bash
