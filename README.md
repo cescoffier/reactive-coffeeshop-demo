@@ -68,6 +68,8 @@ cd coffeeshop-service
 mvn compile quarkus:dev
 ```
 
+#### HTTP barista
+
 ```bash
 cd barista-http
 java -jar target/barista-http-1.0-SNAPSHOT-runner.jar
