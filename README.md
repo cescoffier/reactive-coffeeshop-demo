@@ -9,6 +9,12 @@ It demonstrates the elasticity and resilience of the system.
 mvn clean package
 ```
 
+Install node.js dependencies (<a href="https://nodejs.org/en/download/">node.js</a> is required)
+
+```bash
+cd barista-node/ && npm install
+```
+
 ## Prerequisites
 
 Install Kafka locally for the Kafka tools e.g.
@@ -38,9 +44,9 @@ You need to run:
 
 * the coffee shop service
 * the HTTP barista
-* the Kafka barista
+* the Kafka barista / the Node.js Kafka barista
 
-Im 3 terminals: 
+In 3 terminals: 
 
 ```bash
 cd coffeeshop-service
@@ -52,9 +58,18 @@ cd barista-http
 java -jar target/barista-http-1.0-SNAPSHOT-runner.jar
 ```
 
+#### Quarkus Barista
+
 ```bash
 cd barista-kafka
 mvn compile quarkus:dev
+```
+
+#### Node.js Barista
+
+```bash
+cd barista-node
+npm start
 ```
 
 # Execute with HTTP
@@ -88,6 +103,8 @@ Stop the HTTP Barista, you can't order coffee anymore.
 
 # 2 baristas are better
 
+#### Quarkus
+
 1. Build `barista-kafka` with native image:
    ```bash
    mvn package -Pnative
@@ -98,4 +115,9 @@ Stop the HTTP Barista, you can't order coffee anymore.
     ```
 1. Order more coffee
 
+#### Node.js
+
+1. Open a new terminal and run `npm  start` again.
+
+<br />
 The dashboard shows that the load is dispatched among the baristas.
