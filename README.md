@@ -34,7 +34,7 @@ brew install kafka
 
 or on Linux
 
-Install recent kafka from <a href=""https://kafka.apache.org/downloads>kafka</a> binaries and
+Install recent kafka from <a href="https://kafka.apache.org/downloads">kafka</a> binaries and
 ensure the bin directory is in your path.
 
 Edit create-topics.sh and add the following just after the first line:
