@@ -17,7 +17,7 @@ const run = async () => {
   await consumer.subscribe({ topic: 'orders', fromBeginning: true });
 
   await consumer.run({
-    eachMessage: async ({ topic, partition, message }) => {
+    eachMessage: async ({ message }) => {
       const order = JSON.parse(message.value.toString());
 
       const beverage = await barista.prepare(order);
