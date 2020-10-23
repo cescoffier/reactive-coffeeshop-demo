@@ -1,34 +1,67 @@
-const { Kafka } = require('kafkajs');
-const logger = require('./utils/logger');
+const pino = require('pino');
+const Kafka = require('node-rdkafka');
 const barista = require('./models/barista');
 
-const kafka = new Kafka({
-  clientId: 'barista-kafka-node',
-  brokers: ['localhost:9092'],
+const logger = pino({
+  prettyPrint: true
 });
 
-const consumer = kafka.consumer({ groupId: 'baristas' });
-const producer = kafka.producer();
+const consumer = new Kafka.KafkaConsumer(
+  {
+    'group.id': 'baristas',
+    'metadata.broker.list': 'localhost:9092',
+    'enable.auto.commit': true
+  },
+  {
+    'auto.offset.reset': 'earliest'
+  }
+);
 
-const run = async () => {
-  await consumer.connect();
-  await producer.connect();
+const producer = new Kafka.Producer({
+  'client.id': 'barista-kafka-node',
+  'metadata.broker.list': 'localhost:9092',
+  dr_cb: true
+});
 
-  await consumer.subscribe({ topic: 'orders', fromBeginning: true });
+consumer.on('ready', () => {
+  // log successful connection
+  logger.info('Consumer connected to kafka cluster');
+  // subscribe consumer to a topic
+  consumer.subscribe(['orders']);
+  // start consumer stream
+  consumer.consume();
+});
 
-  await consumer.run({
-    eachMessage: async ({ message }) => {
-      const order = JSON.parse(message.value.toString());
-
-      const beverage = await barista.prepare(order);
-      logger.info(`Order ${order.orderId} for ${order.name} is ready`);
-
-      await producer.send({
-        topic: 'queue',
-        messages: [{ value: JSON.stringify({ ...beverage }) }],
-      });
-    },
+producer.on('ready', () => {
+  // log successful connection
+  logger.info('Producer connected to kafka cluster');
+  // start listening for kafka messages
+  consumer.on('data', async (message) => {
+    // parse order
+    const order = JSON.parse(message.value.toString());
+    // prepare beverage
+    const beverage = await barista.prepare(order);
+    // log order to console
+    logger.info(`Order ${order.orderId} for ${order.name} is ready`);
+    // send message to kafka
+    try {
+      producer.produce(
+        'queue',
+        null,
+        Buffer.from(JSON.stringify({ ...beverage })),
+        null,
+        Date.now()
+      );
+    } catch (err) {
+      logger.error('A problem occurred when sending our message');
+      logger.error(err);
+    }
   });
-};
+});
 
-run().catch(e => logger.error(e.message));
+// without this, we do not get delivery events and the queue
+producer.setPollInterval(100);
+
+// start connections
+consumer.connect();
+producer.connect();
