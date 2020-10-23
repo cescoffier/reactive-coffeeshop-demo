@@ -9,14 +9,10 @@ import org.slf4j.LoggerFactory;
 import javax.enterprise.context.ApplicationScoped;
 import java.util.Random;
 
-import static me.escoffier.quarkus.coffeeshop.Names.pickAName;
-
 @ApplicationScoped
 public class KafkaBarista {
 
     private static final Logger LOGGER = LoggerFactory.getLogger("Kafka-Barista");
-
-    private String name = pickAName();
 
     @Incoming("orders")
     @Outgoing("queue")
@@ -26,6 +22,7 @@ public class KafkaBarista {
     }
 
     Beverage prepare(Order order) {
+        String name = Names.pickAName();
         int delay = getPreparationTime();
         try {
             Thread.sleep(delay);

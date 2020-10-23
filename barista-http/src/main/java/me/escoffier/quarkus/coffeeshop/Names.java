@@ -34,8 +34,9 @@ class Names {
             "Zoe"
     );
 
+    private static Random random = new Random();
+
     static String pickAName() {
-        Random random = new Random();  //NOSONAR - cannot be a static field, would be inlined at build time.
         int index = random.nextInt(VALUES.size());
         return VALUES.get(index);
     }

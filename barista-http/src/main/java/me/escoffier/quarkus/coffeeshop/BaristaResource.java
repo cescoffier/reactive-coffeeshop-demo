@@ -13,8 +13,6 @@ import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static me.escoffier.quarkus.coffeeshop.Names.pickAName;
-
 @Path("/barista")
 @Produces(MediaType.APPLICATION_JSON)
 public class BaristaResource {
@@ -22,8 +20,6 @@ public class BaristaResource {
     private static final Logger LOGGER = LoggerFactory.getLogger("HTTP-Barista");
 
     private ExecutorService queue = Executors.newSingleThreadExecutor();
-
-    private String name = pickAName();
 
     @POST
     public CompletionStage<Beverage> process(Order order) {
@@ -35,6 +31,7 @@ public class BaristaResource {
     }
 
     Beverage prepare(Order order) {
+        String name = Names.pickAName();
         int delay = getPreparationTime();
         try {
             Thread.sleep(delay);
