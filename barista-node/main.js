@@ -24,26 +24,21 @@ const producer = new Kafka.Producer({
 });
 
 consumer.on('ready', () => {
-  // log successful connection
   logger.info('Consumer connected to kafka cluster');
   // subscribe consumer to a topic
   consumer.subscribe(['orders']);
-  // start consumer stream
   consumer.consume();
 });
 
 producer.on('ready', () => {
-  // log successful connection
   logger.info('Producer connected to kafka cluster');
-  // start listening for kafka messages
+
   consumer.on('data', async (message) => {
-    // parse order
     const order = JSON.parse(message.value.toString());
-    // prepare beverage
     const beverage = await barista.prepare(order);
-    // log order to console
+
     logger.info(`Order ${order.orderId} for ${order.name} is ready`);
-    // send message to kafka
+
     try {
       producer.produce(
         'queue',
@@ -62,6 +57,5 @@ producer.on('ready', () => {
 // without this, we do not get delivery events and the queue
 producer.setPollInterval(100);
 
-// start connections
 consumer.connect();
 producer.connect();
