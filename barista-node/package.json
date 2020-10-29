@@ -5,7 +5,8 @@
   "main": "main.js",
   "scripts": {
     "start": "node .",
-    "lint": "eslint --ignore-path .gitignore . --fix"
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint:fix": "eslint --ignore-path .gitignore . --fix"
   },
   "keywords": [],
   "author": "",
@@ -17,6 +18,12 @@
     "pino-pretty": "^4.3.0"
   },
   "devDependencies": {
-    "eslint-config-airbnb-standard": "^3.1.0"
+    "eslint": "^7.12.1",
+    "eslint-config-semistandard": "^15.0.1",
+    "eslint-config-standard": "^16.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.2"
   }
 }
