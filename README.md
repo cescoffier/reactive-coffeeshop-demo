@@ -86,10 +86,8 @@ mvn compile quarkus:dev
 
 ```bash
 cd barista-node
-KAFKA_BOOTSTRAP_SERVERS=localhost:9092 npm start
+npm start
 ```
-
-You can also set the `KAFKA_BOOTSTRAP_SERVERS` env variable inside a **.env** file.
 
 # Execute with HTTP
 

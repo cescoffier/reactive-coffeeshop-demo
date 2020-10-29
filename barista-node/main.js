@@ -12,7 +12,7 @@ const logger = pino({
 const consumer = new Kafka.KafkaConsumer(
   {
     'group.id': 'baristas',
-    'metadata.broker.list': process.env.KAFKA_BOOTSTRAP_SERVERS,
+    'metadata.broker.list': process.env.KAFKA_BOOTSTRAP_SERVERS || 'localhost:9092',
     'enable.auto.commit': true
   },
   {
@@ -22,7 +22,7 @@ const consumer = new Kafka.KafkaConsumer(
 
 const producer = new Kafka.Producer({
   'client.id': 'barista-kafka-node',
-  'metadata.broker.list': process.env.KAFKA_BOOTSTRAP_SERVERS
+  'metadata.broker.list': process.env.KAFKA_BOOTSTRAP_SERVERS || 'localhost:9092'
 });
 
 consumer.on('ready', () => {
