@@ -2,6 +2,9 @@ const pino = require('pino');
 const Kafka = require('node-rdkafka');
 const barista = require('./models/barista');
 
+// load .env file
+require('dotenv').config();
+
 const logger = pino({
   prettyPrint: true
 });
@@ -9,7 +12,7 @@ const logger = pino({
 const consumer = new Kafka.KafkaConsumer(
   {
     'group.id': 'baristas',
-    'metadata.broker.list': 'localhost:9092',
+    'metadata.broker.list': process.env.KAFKA_BOOTSTRAP_SERVERS,
     'enable.auto.commit': true
   },
   {
@@ -19,8 +22,7 @@ const consumer = new Kafka.KafkaConsumer(
 
 const producer = new Kafka.Producer({
   'client.id': 'barista-kafka-node',
-  'metadata.broker.list': 'localhost:9092',
-  dr_cb: true
+  'metadata.broker.list': process.env.KAFKA_BOOTSTRAP_SERVERS
 });
 
 consumer.on('ready', () => {
@@ -48,7 +50,6 @@ producer.on('ready', () => {
         Date.now()
       );
     } catch (err) {
-      logger.error('A problem occurred when sending our message');
       logger.error(err);
     }
   });
@@ -57,5 +58,15 @@ producer.on('ready', () => {
 // without this, we do not get delivery events and the queue
 producer.setPollInterval(100);
 
+// subscribe to error events
+producer.on('connection.failure', (err) => {
+  logger.error(err.message);
+});
+
+consumer.on('connection.failure', (err) => {
+  logger.error(err.message);
+});
+
+// start connections
 consumer.connect();
 producer.connect();
