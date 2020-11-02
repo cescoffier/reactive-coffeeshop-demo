@@ -16,7 +16,7 @@ mvn clean package
 Install node.js dependencies (<a href="https://nodejs.org/en/download/">node.js</a> is required)
 
 ```bash
-cd barista-node/ && npm install
+cd barista-node-kafka/ && npm install
 ```
 
 ## Prerequisites
@@ -59,7 +59,7 @@ Then, create the `orders` topic with `./create-topics.sh`
 You need to run:
 
 * the coffee shop service
-* one or more of the the HTTP, Java Kafka or Node.js Kafka baristas
+* one or more of the the HTTP, Quarkus Kafka or Node.js Kafka baristas
 
 In 3 or more terminals: 
 
@@ -71,21 +71,21 @@ mvn compile quarkus:dev
 #### HTTP barista
 
 ```bash
-cd barista-http
+cd barista-quarkus-http
 java -jar target/barista-http-1.0-SNAPSHOT-runner.jar
 ```
 
 #### Quarkus Barista
 
 ```bash
-cd barista-kafka
+cd barista-quarkus-kafka
 mvn compile quarkus:dev
 ```
 
 #### Node.js Barista
 
 ```bash
-cd barista-node
+cd barista-node-kafka
 npm start
 ```
 
@@ -122,13 +122,13 @@ Stop the HTTP Barista, you can't order coffee anymore.
 
 #### Quarkus
 
-1. Build `barista-kafka` with native image:
+1. Build `barista-quarkus-kafka` with native image:
    ```bash
    mvn package -Pnative
    ```
 1. Start a second barista with: 
     ```bash
-    ./barista-kafka/target/barista-kafka-1.0-SNAPSHOT-runner -Dquarkus.http.port=9999
+    ./barista-quarkus-kafka/target/barista-kafka-1.0-SNAPSHOT-runner -Dquarkus.http.port=9999
     ```
 1. Order more coffee
 
