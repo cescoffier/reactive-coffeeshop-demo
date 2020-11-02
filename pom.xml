@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <quarkus.version>1.8.1.Final</quarkus.version>
+        <quarkus.version>1.9.1.Final</quarkus.version>
 
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -34,9 +34,9 @@
     </dependencyManagement>
 
     <modules>
-        <module>barista-http</module>
+        <module>barista-quarkus-kafka</module>
+        <module>barista-quarkus-http</module>
         <module>coffeeshop-service</module>
-        <module>barista-kafka</module>
     </modules>
 
 </project>
