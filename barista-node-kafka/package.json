@@ -1,0 +1,29 @@
+{
+  "name": "barista-node-kafka",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "start": "node .",
+    "lint": "eslint --ignore-path .gitignore .",
+    "lint:fix": "eslint --ignore-path .gitignore . --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "node-rdkafka": "^2.9.1",
+    "pino": "^6.7.0",
+    "pino-pretty": "^4.3.0"
+  },
+  "devDependencies": {
+    "eslint": "^7.12.1",
+    "eslint-config-semistandard": "^15.0.1",
+    "eslint-config-standard": "^16.0.0",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-standard": "^4.0.2"
+  }
+}

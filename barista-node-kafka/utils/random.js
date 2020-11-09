@@ -23,23 +23,23 @@ const names = [
   'Julie',
   'Matt',
   'Joe',
-  'Zoe',
+  'Zoe'
 ];
 
-function getRandomInt(max) {
+function getRandomInt (max) {
   return Math.floor(Math.random() * Math.floor(max));
 }
 
-function pickName() {
+function pickName () {
   const index = getRandomInt(names.length);
   return names[index];
 }
 
-function getPreparationTime() {
+function getPreparationTime () {
   return getRandomInt(5) * 1000;
 }
 
 module.exports = {
   pickName,
-  getPreparationTime,
+  getPreparationTime
 };
