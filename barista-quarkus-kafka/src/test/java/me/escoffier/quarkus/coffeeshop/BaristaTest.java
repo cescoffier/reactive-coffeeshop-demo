@@ -39,10 +39,10 @@ class BaristaTest {
         await().<List<? extends Message<Beverage>>>until(queue::received, t -> t.size() == 1);
 
         Beverage queuedBeverage = queue.received().get(0).getPayload();
-        Assertions.assertEquals(Beverage.State.READY, queuedBeverage.getPreparationState());
-        Assertions.assertEquals("coffee", queuedBeverage.getBeverage());
-        Assertions.assertEquals("Coffee lover", queuedBeverage.getCustomer());
-        Assertions.assertEquals("1234", queuedBeverage.getOrderId());
+        Assertions.assertEquals(Beverage.State.READY, queuedBeverage.preparationState);
+        Assertions.assertEquals("coffee", queuedBeverage.beverage);
+        Assertions.assertEquals("Coffee lover", queuedBeverage.customer);
+        Assertions.assertEquals("1234", queuedBeverage.orderId);
     }
 
 }
