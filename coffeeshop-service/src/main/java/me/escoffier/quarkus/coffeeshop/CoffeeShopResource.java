@@ -26,7 +26,7 @@ public class CoffeeShopResource {
     @PostMapping("/http")
     public Uni<Beverage> http(Order order) {
         return barista.order(order.setOrderId(getId()))
-                .onItem().invoke(beverage -> beverage.setPreparationState(Beverage.State.READY))
+                .onItem().invoke(beverage -> beverage.preparationState = Beverage.State.READY)
                 .ifNoItem().after(Duration.ofMillis(1500)).fail()
                 .onFailure().recoverWithItem(createFallbackBeverage(order));
     }

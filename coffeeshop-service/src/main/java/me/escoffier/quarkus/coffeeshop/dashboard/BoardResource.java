@@ -21,14 +21,14 @@ public class BoardResource {
     @Channel("beverages")
     Multi<Beverage> queue;
 
-    private Jsonb json = JsonbBuilder.create();
+    private final Jsonb json = JsonbBuilder.create();
 
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public Publisher<String> getQueue() {
         return Multi.createBy().merging()
                 .streams(
-                        queue.map(b -> json.toJson(b)),
+                        queue.map(json::toJson),
                         getPingStream()
                 );
     }
