@@ -8,6 +8,7 @@ public class Order {
     private String product;
     private String name;
     private String orderId;
+    private String creditCard;
 
     public String getProduct() {
         return product;
@@ -33,6 +34,15 @@ public class Order {
 
     public Order setOrderId(String orderId) {
         this.orderId = orderId;
+        return this;
+    }
+
+    public String getCreditCard() {
+        return creditCard;
+    }
+
+    public Order setCreditCard(String creditCard) {
+        this.creditCard = creditCard;
         return this;
     }
 }

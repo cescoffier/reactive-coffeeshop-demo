@@ -138,3 +138,31 @@ Stop the HTTP Barista, you can't order coffee anymore.
 
 <br />
 The dashboard shows that the load is dispatched among the baristas.
+
+## Vault
+
+Display Logs:
+```
+docker logs dev-vault
+```
+
+Initialize Vault:
+```
+docker exec dev-vault sh /tmp/init-vault.sh
+```
+
+Test Barista user:
+```
+docker exec -it dev-vault sh
+
+vault login -method=userpass username=barista password=b0r1st0
+export VAULT_TOKEN=...
+vault kv get secret/creds/barista
+```
+
+Place a Kafka order, Kafka Barista should show:
+```
+2021-04-04 11:33:19,318 INFO  [Kafka-Barista] (vert.x-worker-thread-0) Order frappuccino for abc is ready
+2021-04-04 11:33:19,319 INFO  [Kafka-Barista] (vert.x-worker-thread-0) Decrypting Credit Card Number vault:v1:e/SfOvVO8LeJyMDWKyUmg+mYvb2h44G3dlWy56SHoQ==
+2021-04-04 11:33:19,406 INFO  [Kafka-Barista] (vert.x-worker-thread-0) Billing Credit Card 123 using s3cr3t Billing Code
+```

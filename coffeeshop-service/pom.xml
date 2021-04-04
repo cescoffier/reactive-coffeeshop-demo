@@ -58,6 +58,10 @@
       <groupId>io.quarkus</groupId>
       <artifactId>quarkus-spring-di</artifactId>
     </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-vault</artifactId>
+    </dependency>
   </dependencies>
   <build>
     <plugins>

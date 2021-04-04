@@ -23,6 +23,12 @@
             </div>
         </div>
         <div class="form-group">
+            <label class="col-md-2 control-label" for="creditCard">Credit Card</label>
+            <div class="col-md-6">
+                <input type="text" id="creditCard" class="form-control">
+            </div>
+        </div>
+        <div class="form-group">
             <label class="col-md-2 control-label" for="orderMethod">Order method</label>
             <div class="col-md-10">
                 <select id="orderMethod">
@@ -90,6 +96,7 @@
         const method = $("#orderMethod option:selected").val();
         const order = {
             name: $("#customerName").val(),
+            creditCard: $("#creditCard").val(),
             product: $("#product option:selected").val()
         };
         console.log("Customer name = " + order.name);

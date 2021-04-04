@@ -28,3 +28,18 @@ services:
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  vault:
+    image: vault
+    ports:
+      - 8200:8200
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: myroot
+      VAULT_ADDR: http://localhost:8200
+      VAULT_SKIP_VERIFY: "true"
+      VAULT_TOKEN: myroot
+    container_name: dev-vault
+    volumes:
+      - ./init-vault.sh:/tmp/init-vault.sh
+    cap_add:
+      - IPC_LOCK
