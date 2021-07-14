@@ -70,7 +70,7 @@ mvn quarkus:dev
 
 ```bash
 cd barista-quarkus-http
-java -jar target/barista-http-1.0-SNAPSHOT-runner.jar
+java -jar target/quarkus-app/quarkus-run.jar
 ```
 
 #### Quarkus Barista
