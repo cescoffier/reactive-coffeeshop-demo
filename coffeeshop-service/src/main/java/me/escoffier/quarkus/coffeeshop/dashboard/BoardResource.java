@@ -1,13 +1,13 @@
 package me.escoffier.quarkus.coffeeshop.dashboard;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.smallrye.mutiny.Multi;
 import me.escoffier.quarkus.coffeeshop.model.Beverage;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.reactivestreams.Publisher;
 
 import javax.inject.Inject;
-import javax.json.bind.Jsonb;
-import javax.json.bind.JsonbBuilder;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
@@ -21,14 +21,15 @@ public class BoardResource {
     @Channel("beverages")
     Multi<Beverage> queue;
 
-    private final Jsonb json = JsonbBuilder.create();
+    @Inject
+    ObjectMapper mapper;
 
     @GET
     @Produces(MediaType.SERVER_SENT_EVENTS)
     public Publisher<String> getQueue() {
         return Multi.createBy().merging()
                 .streams(
-                        queue.map(json::toJson),
+                        queue.map(this::toJson),
                         getPingStream()
                 );
     }
@@ -36,6 +37,14 @@ public class BoardResource {
     Multi<String> getPingStream() {
         return Multi.createFrom().ticks().every(Duration.ofSeconds(10))
                 .onItem().transform(x -> "{}");
+    }
+
+    private String toJson(Beverage b) {
+        try {
+            return mapper.writeValueAsString(b);
+        } catch (JsonProcessingException e) {
+            return "";
+        }
     }
 
 }

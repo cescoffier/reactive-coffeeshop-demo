@@ -7,23 +7,20 @@ import me.escoffier.quarkus.coffeeshop.model.Order;
 import org.eclipse.microprofile.reactive.messaging.Channel;
 import org.eclipse.microprofile.reactive.messaging.Emitter;
 import org.eclipse.microprofile.rest.client.inject.RestClient;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
 import java.time.Duration;
 import java.util.UUID;
 
-@RestController
-@RequestMapping("/")
+@Path("/")
 public class CoffeeShopResource {
 
-    @Autowired
     @RestClient
     BaristaService barista;
 
-    @PostMapping("/http")
+    @POST
+    @Path("/http")
     public Uni<Beverage> http(Order order) {
         return barista.order(order.setOrderId(getId()))
                 .onItem().invoke(beverage -> beverage.preparationState = Beverage.State.READY)
@@ -36,11 +33,14 @@ public class CoffeeShopResource {
     }
 
     // Orders emitter (orders)
-    @Autowired @Channel("orders") Emitter<Order> orders;
+    @Channel("orders")
+    Emitter<Order> orders;
     // Queue emitter (beverages)
-    @Autowired @Channel("queue") Emitter<Beverage> queue;
+    @Channel("queue")
+    Emitter<Beverage> queue;
 
-    @PostMapping("/messaging")
+    @POST
+    @Path("/messaging")
     public Order messaging(Order order) {
         order = order.setOrderId(getId());
         queue.send(Beverage.queued(order));
