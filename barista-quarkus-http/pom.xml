@@ -8,7 +8,7 @@
         <groupId>me.escoffier.quarkus.reactive</groupId>
         <artifactId>quarkus-coffeeshop-demo</artifactId>
         <version>1.0-SNAPSHOT</version>
-        <relativePath>..</relativePath>
+        <relativePath>../pom.xml</relativePath>
     </parent>
 
     <artifactId>barista-http</artifactId>
@@ -65,23 +65,11 @@
                     <name>native</name>
                 </property>
             </activation>
+            <properties>
+                <quarkus.package.type>native</quarkus.package.type>
+            </properties>
             <build>
                 <plugins>
-                    <plugin>
-                        <groupId>io.quarkus</groupId>
-                        <artifactId>quarkus-maven-plugin</artifactId>
-                        <version>${quarkus.version}</version>
-                        <executions>
-                            <execution>
-                                <goals>
-                                    <goal>native-image</goal>
-                                </goals>
-                                <configuration>
-                                    <enableHttpUrlHandler>true</enableHttpUrlHandler>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
                     <plugin>
                         <artifactId>maven-failsafe-plugin</artifactId>
                         <version>${surefire-plugin.version}</version>
@@ -93,7 +81,8 @@
                                 </goals>
                                 <configuration>
                                     <systemProperties>
-                                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner</native.image.path>
+                                        <native.image.path>${project.build.directory}/${project.build.finalName}-runner
+                                        </native.image.path>
                                     </systemProperties>
                                 </configuration>
                             </execution>
@@ -103,5 +92,5 @@
             </build>
         </profile>
     </profiles>
-    
+
 </project>

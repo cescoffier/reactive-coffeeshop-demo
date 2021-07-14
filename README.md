@@ -1,4 +1,4 @@
-# Coffeeshop Demo with Quarkus
+# Coffee Shop Demo with Quarkus
 
 This directory contains a set of demo around _reactive_ in Quarkus with Kafka.
 It demonstrates the elasticity and resilience of the system.
@@ -7,7 +7,6 @@ It demonstrates the elasticity and resilience of the system.
 
 Install java dependencies (<a href="https://adoptopenjdk.net/installation.html">java 11</a> and
 <a href="https://maven.apache.org/install.html">Maven</a> are required)
-
 
 ```bash
 mvn clean package
@@ -24,7 +23,6 @@ cd barista-node-kafka/ && npm install
 Install <a href="https://docs.docker.com/get-docker/">Docker</a>.
 
 If you are not using a desktop system, install <a href="https://docs.docker.com/compose/install/">Docker Compose</a>.
-
 
 Install Kafka locally for the Kafka tools e.g.
 
@@ -59,13 +57,13 @@ Then, create the `orders` topic with `./create-topics.sh`
 You need to run:
 
 * the coffee shop service
-* one or more of the the HTTP, Quarkus Kafka or Node.js Kafka baristas
+* one or more of the HTTP, Quarkus Kafka or Node.js Kafka baristas
 
 In 3 or more terminals: 
 
 ```bash
 cd coffeeshop-service
-mvn compile quarkus:dev
+mvn quarkus:dev
 ```
 
 #### HTTP barista
@@ -79,7 +77,7 @@ java -jar target/barista-http-1.0-SNAPSHOT-runner.jar
 
 ```bash
 cd barista-quarkus-kafka
-mvn compile quarkus:dev
+mvn quarkus:dev
 ```
 
 #### Node.js Barista
