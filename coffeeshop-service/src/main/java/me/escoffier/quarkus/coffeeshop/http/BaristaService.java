@@ -3,21 +3,26 @@ package me.escoffier.quarkus.coffeeshop.http;
 import io.smallrye.mutiny.Uni;
 import me.escoffier.quarkus.coffeeshop.model.Beverage;
 import me.escoffier.quarkus.coffeeshop.model.Order;
+import org.eclipse.microprofile.faulttolerance.Fallback;
+import org.eclipse.microprofile.faulttolerance.Timeout;
 import org.eclipse.microprofile.rest.client.inject.RegisterRestClient;
 
-import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
+import java.time.temporal.ChronoUnit;
 
 @Path("/barista")
-@RegisterRestClient
-@Produces(MediaType.APPLICATION_JSON)
-@Consumes(MediaType.APPLICATION_JSON)
+@RegisterRestClient(configKey = "barista-http")
 public interface BaristaService {
 
     @POST
+    @Timeout(value = 5, unit = ChronoUnit.SECONDS)
+    @Fallback(fallbackMethod = "fallback")
     Uni<Beverage> order(Order order);
 
+
+    default Uni<Beverage> fallback(Order order) {
+        return Uni.createFrom().item(
+                new Beverage(order.product(), order.customer(), null, order.orderId(), Beverage.State.FAILED));
+    }
 }

@@ -6,6 +6,8 @@
 # Log file
 *.log
 
+etc/
+
 #IntelliJ files
 .idea/
 *.iml

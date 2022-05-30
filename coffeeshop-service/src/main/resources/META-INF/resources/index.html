@@ -17,9 +17,9 @@
 
     <form id="orderForm" class="form-horizontal">
         <div class="form-group">
-            <label class="col-md-2 control-label" for="customerName">Name</label>
+            <label class="col-md-2 control-label" for="customer">Name</label>
             <div class="col-md-6">
-                <input type="text" id="customerName" class="form-control">
+                <input type="text" id="customer" class="form-control">
             </div>
         </div>
         <div class="form-group">
@@ -89,16 +89,16 @@
     $("#orderForm").submit(function(event){
         const method = $("#orderMethod option:selected").val();
         const order = {
-            name: $("#customerName").val(),
+            customer: $("#customer").val(),
             product: $("#product option:selected").val()
         };
-        console.log("Customer name = " + order.name);
+        console.log("Customer name = " + order.customer);
 
         if(method==="http") {
             const state = {
-                customer: order.name,
+                customer: order.customer,
                 beverage: order.product,
-                preparationState: "IN_PROGRESS"
+                state: "IN_PROGRESS"
             };
             $("tbody").prepend(line(state));
             $("#order-button").addClass("disabled").attr("disabled", true);
@@ -118,10 +118,10 @@
             if(method==="http") {
                 const state = {
                     orderId: response.orderId,
-                    customer: order.name,
+                    customer: order.customer,
                     beverage: order.product,
                     preparedBy: response.preparedBy,
-                    preparationState: response.preparationState
+                    state: response.state
                 };
                 $('tbody tr:first').replaceWith(line(state));
                 $("#order-button").removeClass("disabled").removeAttr("disabled");
@@ -142,27 +142,27 @@
             }
             console.log(e);
             const beverage = JSON.parse(e.data);
-            if(beverage.preparationState==="IN_QUEUE")
+            if(beverage.state==="IN_QUEUE")
                 $("tbody").prepend(line(beverage));
-            if(beverage.preparationState==="READY")
+            if(beverage.state==="READY")
                 $("#"+beverage.orderId).replaceWith(line(beverage));
             
         };
     });
 
-    function line(order) {
-        const id = order.orderId;
-        const product = order.beverage;
-        const customer = order.customer;
+    function line(bev) {
+        const id = bev.orderId;
+        const product = bev.beverage;
+        const customer = bev.customer;
         let barista = "";
-        if (order.preparedBy) {
-            barista = order.preparedBy;
+        if (bev.preparedBy) {
+            barista = bev.preparedBy;
         }
         return "<tr id='" + id + "'>" +
             "<td>" + customer + "</td>" +
             "<td>" + product + "</td>" +
             "<td>" + barista + "</td>" +
-            "<td>" + order.preparationState + "</td></tr>";
+            "<td>" + bev.state + "</td></tr>";
     }
 
 

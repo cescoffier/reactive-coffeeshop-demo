@@ -5,7 +5,7 @@ It demonstrates the elasticity and resilience of the system.
 
 ## Build
 
-Install java dependencies (<a href="https://adoptopenjdk.net/installation.html">java 11</a> and
+Install java dependencies (<a href="https://adoptopenjdk.net/installation.html">java 17</a> and
 <a href="https://maven.apache.org/install.html">Maven</a> are required)
 
 ```bash
@@ -22,36 +22,6 @@ cd barista-node-kafka/ && npm install
 
 Install <a href="https://docs.docker.com/get-docker/">Docker</a>.
 
-If you are not using a desktop system, install <a href="https://docs.docker.com/compose/install/">Docker Compose</a>.
-
-Install Kafka locally for the Kafka tools e.g.
-
-```bash
-brew install kafka
-```
-
-or on Linux
-
-* install recent kafka from <a href="https://kafka.apache.org/downloads">kafka</a> binaries and
-  ensure the bin directory is in your path.
-
-* edit create-topics.sh and replace all instances of `kafka-topics` with `kafka-topics.sh`
-
-Run Kafka with:
-
-```bash
-docker-compose up
-```
-
-In case of previous run, you can clean the state with
-
-```bash
-docker-compose down
-docker-compose rm
-```
-
-Then, create the `orders` topic with `./create-topics.sh`
-
 # Run the demo
 
 You need to run:
@@ -65,6 +35,8 @@ In 3 or more terminals:
 cd coffeeshop-service
 mvn quarkus:dev
 ```
+
+This also starts the Kafka Dev Service and create the `orders` topic with 4 partitions.
 
 #### HTTP barista
 
@@ -92,7 +64,7 @@ npm start
 The first part of the demo shows HTTP interactions:
 
 * Barista code: `me.escoffier.quarkus.coffeeshop.BaristaResource`
-* CoffeeShop code: `me.escoffier.quarkus.coffeeshop.CoffeeShopResource.http`
+* CoffeeShop code: `me.escoffier.quarkus.coffeeshop.CoffeeShopResource#http`
 * Generated client: `me.escoffier.quarkus.coffeeshop.http.BaristaService`
 
 Order coffees by opening `http://localhost:8080`. Select the HTTP method.

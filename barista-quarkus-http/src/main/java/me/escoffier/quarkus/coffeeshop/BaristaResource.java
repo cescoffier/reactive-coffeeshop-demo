@@ -1,37 +1,34 @@
 package me.escoffier.quarkus.coffeeshop;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import io.smallrye.mutiny.Uni;
+import org.jboss.logging.Logger;
 
+import javax.inject.Inject;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
-import javax.ws.rs.Produces;
-import javax.ws.rs.core.MediaType;
 import java.util.Random;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionStage;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static me.escoffier.quarkus.coffeeshop.Names.pickAName;
 
 @Path("/barista")
-@Produces(MediaType.APPLICATION_JSON)
 public class BaristaResource {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger("HTTP-Barista");
+    @Inject
+    Logger logger;
 
-    private ExecutorService queue = Executors.newSingleThreadExecutor();
-
-    private String name = pickAName();
+    private final ExecutorService queue = Executors.newSingleThreadExecutor();
+    private final String barista = pickAName();
+    private final Random random = new Random();
 
     @POST
-    public CompletionStage<Beverage> process(Order order) {
-        return CompletableFuture.supplyAsync(() -> {
+    public Uni<Beverage> process(Order order) {
+        return Uni.createFrom().item(() -> {
             Beverage coffee = prepare(order);
-            LOGGER.info("Order {} for {} is ready", order.getProduct(), order.getName());
+            logger.infof("Order %s for %s is ready", order.product(), order.customer());
             return coffee;
-        }, queue);
+        }).runSubscriptionOn(queue);
     }
 
     Beverage prepare(Order order) {
@@ -41,10 +38,10 @@ public class BaristaResource {
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
-        return new Beverage(order, name);
+        return Beverage.from(order, barista);
     }
 
-    private Random random = new Random();
+
     int getPreparationTime() {
         return random.nextInt(5) * 1000;
     }

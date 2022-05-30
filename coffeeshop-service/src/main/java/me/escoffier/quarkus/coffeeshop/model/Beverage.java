@@ -1,36 +1,25 @@
 package me.escoffier.quarkus.coffeeshop.model;
 
-import io.quarkus.runtime.annotations.RegisterForReflection;
+public record Beverage(String beverage, String customer, String preparedBy, String orderId, State state) {
 
-@RegisterForReflection
-public class Beverage {
-
-    public String beverage;
-    public String customer;
-    public String preparedBy;
-    public String orderId;
-    public State preparationState;
-
-    public Beverage() {
-
-    }
 
     public static Beverage queued(Order order) {
-        return new Beverage(order, null, State.IN_QUEUE);
+        return new Beverage(order.product(), order.customer(), null, order.orderId(), State.IN_QUEUE);
+    }
+
+    public Beverage ready() {
+        if (state != State.FAILED) {
+            return new Beverage(beverage, customer, preparedBy, orderId, State.READY);
+        }
+        return this;
     }
 
     public enum State {
         IN_QUEUE,
         BEING_PREPARED,
         READY,
-        FAILED;
+        FAILED
     }
 
-    public Beverage(Order order, String baristaName, State state) {
-        this.beverage = order.getProduct();
-        this.customer = order.getName();
-        this.orderId = order.getOrderId();
-        this.preparedBy = baristaName;
-        this.preparationState = state;
-    }
 }
+

@@ -1,15 +1,7 @@
 package me.escoffier.quarkus.coffeeshop;
 
-import io.quarkus.runtime.annotations.RegisterForReflection;
+public record Beverage(String beverage, String customer, String preparedBy, String orderId, State state) {
 
-@RegisterForReflection
-public class Beverage {
-
-    public String beverage;
-    public String customer;
-    public String preparedBy;
-    public String orderId;
-    public State preparationState;
 
     public enum State {
         IN_QUEUE,
@@ -17,16 +9,12 @@ public class Beverage {
         READY;
     }
 
-    public Beverage() {
-        // Used by JSON-B
-    }
-
-    public Beverage(Order order, String baristaName, State state) {
-        this.beverage = order.getProduct();
-        this.customer = order.getName();
-        this.orderId = order.getOrderId();
-        this.preparedBy = baristaName;
-        this.preparationState = state;
+    public static Beverage from(Order order, String baristaName, State state) {
+        return new Beverage(order.product(),
+                order.customer(),
+                baristaName,
+                order.orderId(),
+                state);
     }
 
 }
