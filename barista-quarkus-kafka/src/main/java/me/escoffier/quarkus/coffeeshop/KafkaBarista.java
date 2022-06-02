@@ -20,13 +20,12 @@ public class KafkaBarista {
     private final String barista = pickAName();
     private final Random random = new Random();
 
-    // orders -> prepare -> queue
+    //TODO orders -> prepare (blocking) -> queue
 
     @Incoming("orders")
     @Outgoing("queue")
     @Blocking
     public Beverage process(Order order) {
-        logger.infof("Handling order %s", order);
         return prepare(order);
     }
 

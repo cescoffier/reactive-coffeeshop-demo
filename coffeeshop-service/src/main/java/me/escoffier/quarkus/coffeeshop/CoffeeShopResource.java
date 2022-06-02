@@ -26,30 +26,24 @@ public class CoffeeShopResource {
 
     @POST
     @Path("/http")
-    public Uni<Beverage> http(Order order) {
+    public Beverage http(Order order) {
         logger.infof("Received order %s on /http", order);
-        return barista.order(order.withOrderId(getId()))
-                .map(Beverage::ready)
-                .log();
+        Beverage beverage = barista.order(order.withOrderId(getId()));
+        return beverage.ready();
     }
 
     // Orders emitter (orders)
-    @Channel("orders")
-    Emitter<Order> orders;
-
+    @Channel("orders") Emitter<Order> orders;
     // Queue emitter (beverages)
-    @Channel("queue")
-    Emitter<Beverage> queue;
+    @Channel("queue") Emitter<Beverage> queue;
 
     @POST
     @Path("/messaging")
     public Order messaging(Order order) {
-        // ...
         logger.infof("Received order %s on /messaging", order);
         order = order.withOrderId(getId());
-        Beverage beverage = Beverage.queued(order);
-        queue.send(beverage);
         orders.send(order);
+        queue.send(Beverage.queued(order));
         return order;
     }
 

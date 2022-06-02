@@ -18,11 +18,10 @@ public interface BaristaService {
     @POST
     @Timeout(value = 5, unit = ChronoUnit.SECONDS)
     @Fallback(fallbackMethod = "fallback")
-    Uni<Beverage> order(Order order);
+    Beverage order(Order order);
 
 
-    default Uni<Beverage> fallback(Order order) {
-        return Uni.createFrom().item(
-                new Beverage(order.product(), order.customer(), null, order.orderId(), Beverage.State.FAILED));
+    default Beverage fallback(Order order) {
+        return new Beverage(order.product(), order.customer(), null, order.orderId(), Beverage.State.FAILED);
     }
 }
