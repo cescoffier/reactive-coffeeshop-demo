@@ -19,6 +19,8 @@
         <maven.compiler.source>17</maven.compiler.source>
 
         <surefire-plugin.version>2.22.2</surefire-plugin.version>
+
+        <quarkus.native.builder-image>quay.io/quarkus/ubi-quarkus-mandrel:22.1-java17</quarkus.native.builder-image>
     </properties>
 
     <dependencyManagement>
